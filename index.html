@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Hit_timer</title>
+<style type="text/css">
+  input.tul {
+    width: 15px;
+  }
+   input.weight {
+    width: 25px;
+  } input.timedate {
+    width: 20 px;
+  }
+</style>
+</head>
+<body ng-app="excercises">
+  <div class="hero-unit" ng-controller="MainCtrl">
+  
+  <fieldset>
+    <ul>
+    <li>
+      <input id="date" name="date" type="date" ng-model="newexcercise.timedate">
+        <script type="text/javascript">
+              document.getElementById('date').value = Date();
+        </script>
+    </li>
+    <li>
+      <label> Exercise Name </label>
+      <input type="text" ng-model="newexcercise.name"/>
+    </li>
+    <li>
+      <label> Weight </label>
+      <input type="text" ng-model="newexcercise.weight"/>
+    </li>
+    <li>
+    <label> Time Under Load </label>
+      <textarea ng-model="newexcercise.tul"></textarea>
+    <button type="submit" ng-click="addexcercise()">Save excercise</button>
+    </li>
+ </ul>
+  </fieldset>
+  <div class="workouts" ng-repeat="excercise in workouts">
+    <p>{{excercise.name}} for <input class="tul" ng-model="excercise.tul"></input> secs lifting <input class="weight" ng-model="excercise.weight"></input>lbs. on <input class="timedate" type="date" ng-model="excercise.timedate"></input>
+    </p>
+
+  </div>  
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+<script src="https://cdn.firebase.com/v0/firebase.js"></script>
+<script src="https://cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js"></script>
+<script type="text/javascript">
+  app = angular.module("excercises", ["firebase"]);
+
+  app.controller('MainCtrl', function($scope, angularFire) {
+    var ref;
+    ref = new Firebase("https://hit-timer-app.firebaseio.com/timer");
+    $scope.workouts = [];
+
+    $scope.addexcercise = function() {
+      $scope.workouts.push($scope.newexcercise);
+      return $scope.newexcercise = "";
+    };
+
+    return angularFire(ref, $scope, "workouts");
+   });
+</script>
+</body>
+</html>
